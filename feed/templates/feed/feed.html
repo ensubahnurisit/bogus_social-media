@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini Quora Feed</title>
+    <link rel="stylesheet" href="{% static 'feed/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Mini Feed</h1>
+
+        {% for post in posts %}
+        <div class="post-card">
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div class="username">{{ post.user.username }}</div>
+            </div>
+            <div class="post-content">{{ post.content }}</div>
+
+            <ul class="comment-list">
+                {% for comment in post.comment_set.all %}
+                <li>
+                    <span class="username">{{ comment.user.username }}:</span>
+                    <span class="content">{{ comment.content }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
