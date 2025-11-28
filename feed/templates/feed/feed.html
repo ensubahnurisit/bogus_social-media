@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mini Quora Feed</title>
+    <title>Mini Feed</title>
     <link rel="stylesheet" href="{% static 'feed/style.css' %}">
 </head>
 <body>
@@ -15,7 +15,14 @@
                 <div class="avatar"></div>
                 <div class="username">{{ post.user.username }}</div>
             </div>
-            <div class="post-content">{{ post.content }}</div>
+            <div class="post-content">
+                {{ post.content }}
+                {% if post.image %}
+                <div>
+                    <img src="{{ post.image.url }}" alt="Post Image" style="max-width:100%; margin-top:10px; border-radius:6px;">
+                </div>
+                {% endif %}
+            </div>
 
             <ul class="comment-list">
                 {% for comment in post.comment_set.all %}
