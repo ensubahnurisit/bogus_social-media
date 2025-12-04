@@ -1,12 +1,27 @@
 # Python
-*.pyc
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 
-# Django
+# Environment / config
+.env
+*.env
+
+# Database
 db.sqlite3
+
+# Django migrations
+*/migrations/*.pyc
+*/migrations/__pycache__/
+*/migrations/*.py
+
+# Media / uploads
 media/
+staticfiles/
 *.log
 
-# VS Code / IDE
+# IDE / editor
 .vscode/
 .idea/
+*.swp

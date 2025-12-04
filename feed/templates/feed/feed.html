@@ -2,62 +2,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mini Feed</title>
-    <link rel="stylesheet" href="{% static 'feed/style.css' %}">
+<meta charset="UTF-8">
+<title>Feed - Social App</title>
+<style>
+body {margin:0; font-family: Arial,sans-serif; background:#f0f2f5;}
+.navbar {background:#1877f2; padding:10px; display:flex; justify-content:space-between; color:white;}
+.navbar a {color:white; text-decoration:none; margin:0 10px;}
+.container {width:600px; margin:20px auto;}
+.post-card {background:white; padding:15px; margin-bottom:15px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+.post-header {display:flex; align-items:center; margin-bottom:10px;}
+.avatar {width:40px; height:40px; background:#ccc; border-radius:50%; margin-right:10px;}
+.username {font-weight:bold;}
+.post-content {margin-bottom:10px;}
+.post-image {max-width:100%; border-radius:6px; margin-top:5px;}
+.post-actions button {margin-right:10px; padding:5px 10px; background:#1877f2; color:white; border:none; cursor:pointer;}
+.post-actions button:hover {background:#0f64d7;}
+.comment-list {list-style:none; padding-left:0; font-size:14px;}
+.comment-list li {margin-bottom:5px;}
+</style>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <a href="{% url 'feed' %}" class="nav-logo">SocialApp</a>
-        </div>
-        <div class="nav-right">
-            <a href="{% url 'feed' %}">Home</a>
-            <a href="{% url 'create_post' %}">Post</a>
-        </div>
-    </nav>
-
-    <div class="container">
-        <h1>Mini Feed</h1>
-
-        {% for post in posts %}
-        <div class="post-card">
-            <!-- Post Header -->
-            <div class="post-header">
-                <div class="avatar"></div>
-                <div class="username">{{ post.user.username }}</div>
-            </div>
-
-            <!-- Post Content -->
-            <div class="post-content">
-                {{ post.content }}
-                {% if post.image %}
-                <div class="post-image-container">
-                    <img src="{{ post.image.url }}" alt="Post Image" class="post-image">
-                </div>
-                {% endif %}
-            </div>
-
-            <!-- Post Actions -->
-            <div class="post-actions">
-                <form action="{% url 'like_post' post.id %}" method="POST" class="inline-form">
-                    {% csrf_token %}
-                    <button type="submit" class="btn like-btn">Like ({{ post.likes }})</button>
-                </form>
-                <a href="{% url 'comment_post' post.id %}" class="btn comment-btn">Comment</a>
-            </div>
-
-            <!-- Comments -->
-            <ul class="comment-list">
-                {% for comment in post.comment_set.all %}
-                <li>
-                    <span class="username">{{ comment.user.username }}:</span>
-                    <span class="content">{{ comment.content }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endfor %}
+<div class="navbar">
+    <div>
+        <a href="{% url 'feed' %}">SocialApp</a>
     </div>
+    <div>
+        <a href="{% url 'create_post' %}">Post</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+<h1>Feed</h1>
+{% for post in posts %}
+<div class="post-card">
+    <div class="post-header">
+        <div class="avatar"></div>
+        <div class="username">{{ post.user.username }}</div>
+    </div>
+    <div class="post-content">
+        {{ post.content }}
+        {% if post.image %}
+        <img src="{{ post.image.url }}" class="post-image">
+        {% endif %}
+    </div>
+    <div class="post-actions">
+        <form action="{% url 'like_post' post.id %}" method="POST" style="display:inline;">{% csrf_token %}
+            <button type="submit">Like</button>
+        </form>
+        <a href="{% url 'comment_post' post.id %}">Comment</a>
+    </div>
+    <ul class="comment-list">
+        {% for comment in post.comment_set.all %}
+        <li><span class="username">{{ comment.user.username }}:</span> {{ comment.content }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+</div>
 </body>
 </html>
