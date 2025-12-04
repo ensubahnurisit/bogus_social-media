@@ -1,27 +1,35 @@
-# Python
+# Python bytecode
+*.pyc
 __pycache__/
-*.py[cod]
-*.pyo
-*.pyd
 
-# Environment / config
-.env
-*.env
-
-# Database
+# Django database
 db.sqlite3
 
-# Django migrations
-*/migrations/*.pyc
-*/migrations/__pycache__/
-*/migrations/*.py
+# Environment variables
+.env
 
-# Media / uploads
+# Django media files
 media/
-staticfiles/
-*.log
+feed/test_media/
 
-# IDE / editor
+# VSCode / IDE settings
 .vscode/
 .idea/
-*.swp
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Docker (if added later)
+*.pid
+*.sock
+*.bak
+
+# Optional: coverage reports
+htmlcov/
+.coverage

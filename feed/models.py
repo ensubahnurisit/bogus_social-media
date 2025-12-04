@@ -29,8 +29,9 @@ class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
-    image = models.ImageField(upload_to='posts/', null=True, blank=True,max_length=255)
+    image = models.ImageField(upload_to='posts/', null=True, blank=True, max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='liked_posts')
 
     def save(self, *args, **kwargs):
         if not self.image:

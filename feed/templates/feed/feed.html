@@ -4,24 +4,121 @@
 <head>
 <meta charset="UTF-8">
 <title>Feed - Social App</title>
+
 <style>
-body {margin:0; font-family: Arial,sans-serif; background:#f0f2f5;}
-.navbar {background:#1877f2; padding:10px; display:flex; justify-content:space-between; color:white;}
-.navbar a {color:white; text-decoration:none; margin:0 10px;}
-.container {width:600px; margin:20px auto;}
-.post-card {background:white; padding:15px; margin-bottom:15px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-.post-header {display:flex; align-items:center; margin-bottom:10px;}
-.avatar {width:40px; height:40px; background:#ccc; border-radius:50%; margin-right:10px;}
-.username {font-weight:bold;}
-.post-content {margin-bottom:10px;}
-.post-image {max-width:100%; border-radius:6px; margin-top:5px;}
-.post-actions button {margin-right:10px; padding:5px 10px; background:#1877f2; color:white; border:none; cursor:pointer;}
-.post-actions button:hover {background:#0f64d7;}
-.comment-list {list-style:none; padding-left:0; font-size:14px;}
-.comment-list li {margin-bottom:5px;}
+body {
+    margin:0; 
+    font-family: Arial, sans-serif; 
+    background:#f0f2f5;
+}
+
+.navbar {
+    background:#1877f2; 
+    padding:10px; 
+    display:flex; 
+    justify-content:space-between; 
+    color:white;
+}
+.navbar a {
+    color:white; 
+    text-decoration:none; 
+    margin:0 10px;
+}
+
+.container {
+    width:600px; 
+    margin:20px auto;
+}
+
+.post-card {
+    background:white; 
+    padding:15px; 
+    margin-bottom:20px; 
+    border-radius:10px; 
+    box-shadow:0 0 12px rgba(0,0,0,0.12);
+}
+
+.post-header {
+    display:flex; 
+    align-items:center; 
+    margin-bottom:10px;
+}
+.avatar {
+    width:40px; 
+    height:40px; 
+    background:#ccc; 
+    border-radius:50%; 
+    margin-right:10px;
+}
+.username {
+    font-weight:bold;
+}
+
+.post-content {
+    margin-bottom:10px; 
+    font-size:15px;
+}
+.post-image {
+    max-width:100%; 
+    border-radius:8px; 
+    margin-top:8px;
+}
+
+.post-actions {
+    margin:10px 0;
+}
+.post-actions button {
+    padding:6px 10px; 
+    background:#1877f2; 
+    color:white; 
+    border:none; 
+    cursor:pointer; 
+    border-radius:4px;
+}
+.post-actions button:hover {
+    background:#0f64d7;
+}
+
+.comment-list {
+    list-style:none; 
+    padding-left:0; 
+    margin-top:10px; 
+    margin-bottom:10px;
+}
+.comment-list li {
+    background:#f1f1f1;
+    padding:6px 8px;
+    border-radius:6px;
+    margin-bottom:6px;
+}
+
+.comment-form {
+    display:flex; 
+    margin-top:10px;
+}
+.comment-form input {
+    flex:1;
+    padding:8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    margin-right:6px;
+}
+.comment-form button {
+    padding:8px 12px;
+    background:#1877f2;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+.comment-form button:hover {
+    background:#0f64d7;
+}
 </style>
+
 </head>
 <body>
+
 <div class="navbar">
     <div>
         <a href="{% url 'feed' %}">SocialApp</a>
@@ -33,32 +130,57 @@ body {margin:0; font-family: Arial,sans-serif; background:#f0f2f5;}
 </div>
 
 <div class="container">
+
 <h1>Feed</h1>
+
 {% for post in posts %}
 <div class="post-card">
+
     <div class="post-header">
         <div class="avatar"></div>
         <div class="username">{{ post.user.username }}</div>
     </div>
+
     <div class="post-content">
         {{ post.content }}
         {% if post.image %}
         <img src="{{ post.image.url }}" class="post-image">
         {% endif %}
     </div>
+
     <div class="post-actions">
-        <form action="{% url 'like_post' post.id %}" method="POST" style="display:inline;">{% csrf_token %}
-            <button type="submit">Like</button>
+        <form action="{% url 'like_post' post.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">
+                {% if user in post.likes.all %}
+                    ❤️ Unlike ({{ post.likes.count }})
+                {% else %}
+                    👍 Like ({{ post.likes.count }})
+                {% endif %}
+            </button>
         </form>
-        <a href="{% url 'comment_post' post.id %}">Comment</a>
     </div>
+
+    <!-- Comments -->
     <ul class="comment-list">
         {% for comment in post.comment_set.all %}
-        <li><span class="username">{{ comment.user.username }}:</span> {{ comment.content }}</li>
+        <li>
+            <strong>{{ comment.user.username }}:</strong> {{ comment.content }}
+        </li>
         {% endfor %}
     </ul>
+
+    <!-- Comment Form -->
+    <form class="comment-form" action="{% url 'comment_post' post.id %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="content" placeholder="Write a comment..." required>
+        <button type="submit">Post</button>
+    </form>
+
 </div>
 {% endfor %}
+
 </div>
+
 </body>
 </html>

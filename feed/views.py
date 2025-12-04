@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -58,11 +58,30 @@ def post_view(request):
         return redirect("feed")
     return render(request, "feed/post.html")
 
-# Placeholder Likes & Comments
+# Like post
 @login_required(login_url='login')
 def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)  # Unlike
+    else:
+        post.likes.add(request.user)     # Like
     return redirect('feed')
 
+# Comment post
 @login_required(login_url='login')
 def comment_post(request, post_id):
-    return redirect('feed')
+    post = Post.objects.get(id=post_id)
+
+    if request.method == "POST":
+        content = request.POST.get("comment")
+        if content and content.strip():
+            Comment.objects.create(
+                post=post,
+                user=request.user,
+                content=content
+            )
+        return redirect("feed")
+
+    return redirect("feed")
+
